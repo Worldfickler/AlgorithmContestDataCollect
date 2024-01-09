@@ -1,0 +1,9 @@
+package org.algotithmcontestdatacollect.displaybackend.repositories.IntelligentTraining;
+
+import org.algotithmcontestdatacollect.displaybackend.entities.IntelligentTraining.IntelligentTrainingSubmit;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+public interface IntelligentTrainingSubmitRepository extends JpaRepository<IntelligentTrainingSubmit, Void>, JpaSpecificationExecutor<IntelligentTrainingSubmit> {
+
+}
