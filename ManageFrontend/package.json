@@ -1,0 +1,30 @@
+{
+  "name": "managefrontend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "csv": "^6.2.0",
+    "csv-parser": "^3.0.0",
+    "echarts": "^5.3.3",
+    "element-plus": "^2.2.10",
+    "jssha": "^3.2.0",
+    "sass": "^1.54.0",
+    "scss": "^0.2.4",
+    "vform3-builds": "^3.0.8",
+    "vue": "^3.2.25",
+    "vue-json-viewer": "^3.0.4",
+    "vue-router": "^4.1.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.3",
+    "unplugin-auto-import": "^0.10.2",
+    "unplugin-vue-components": "^0.21.2",
+    "vite": "^2.9.9"
+  }
+}
