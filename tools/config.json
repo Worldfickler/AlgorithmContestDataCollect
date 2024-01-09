@@ -1,0 +1,21 @@
+{
+    "DB_USERNAME": "acdc_manager",
+    "DB_PASSWORD": "jh6679386",
+    "DB_URL": "jdbc:mysql://127.0.0.1:3306/algorithm_contest_data_collect",
+    "REDIS_HOST": "127.0.0.1",
+    "REDIS_PORT": "16379",
+    "REDIS_PASSWORD": "jh6679386",
+    "CRAWLERTASK_STREAM": "CrawlerTasks",
+    "CRAWLERTASK_GROUP": "consumer",
+    "RESULTQUEUE_STREAM": "ResultQueue",
+    "RESULTQUEUE_GROUP": "consumer",
+    "ERRORQUEUE_STREAM": "ErrorQueue",
+    "ERRORQUEUE_GROUP": "consumer",
+    "MANAGER_BACKEND_PORT": "8041",
+    "DISPLAY_BACKEND_PORT": "8043",
+    "CRAWLER_DISPATCHER_PORT": "8040",
+    "MANAGER_FRONTEND_PORT": "8042",
+    "DISPLAY_FRONTEND_PORT": "8044",
+    "WX_BOT_URL": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=60203c71-8833-41a2-8d49-d0e71077d07d",
+    "LOG_FILE_PATH":"/var/log/ACDC/"
+}
