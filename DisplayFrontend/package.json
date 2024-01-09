@@ -1,0 +1,31 @@
+{
+  "name": "displayfrontend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --port 8050",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@highlightjs/vue-plugin": "^2.1.0",
+    "axios": "^0.27.2",
+    "echarts": "^5.3.3",
+    "element-plus": "^2.2.10",
+    "fast-glob": "^3.3.1",
+    "highlight.js": "^11.6.0",
+    "jssha": "^3.2.0",
+    "pinia": "^2.0.23",
+    "sass": "^1.54.0",
+    "scss": "^0.2.4",
+    "vform3-builds": "^3.0.8",
+    "vue": "^3.3.4",
+    "vue-json-viewer": "^3.0.4",
+    "vue-router": "^4.1.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.4",
+    "vite": "^2.9.9",
+    "vite-plugin-svg-icons": "^2.0.1"
+  }
+}
