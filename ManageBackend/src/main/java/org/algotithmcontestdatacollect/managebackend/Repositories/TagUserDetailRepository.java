@@ -1,0 +1,13 @@
+package org.algotithmcontestdatacollect.managebackend.Repositories;
+
+import org.algotithmcontestdatacollect.managebackend.Entities.TagUserDetail;
+import org.algotithmcontestdatacollect.managebackend.Entities.TagUserMapPK;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface TagUserDetailRepository extends JpaRepository<TagUserDetail, TagUserMapPK> {
+    List<TagUserDetail> findAllByTid(Long tid);
+
+
+}

@@ -1,0 +1,11 @@
+package org.algotithmcontestdatacollect.managebackend.Repositories.IntelligentTraining;
+
+import org.algotithmcontestdatacollect.managebackend.Entities.IntelligentTraining.IntelligentTrainingQuestions;
+import org.algotithmcontestdatacollect.managebackend.Entities.IntelligentTraining.IntelligentTrainingQuestionsPK;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface IntelligentTrainingQuestionsRepository extends JpaRepository<IntelligentTrainingQuestions, IntelligentTrainingQuestionsPK> {
+    List<IntelligentTrainingQuestions> getIntelligentTrainingQuestionsEntitiesByTid(Integer tid);
+}

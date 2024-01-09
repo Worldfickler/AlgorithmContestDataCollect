@@ -1,0 +1,7 @@
+package org.algotithmcontestdatacollect.managebackend.Repositories.IntelligentTraining;
+
+import org.algotithmcontestdatacollect.managebackend.Entities.IntelligentTraining.IntelligentTrainingStrategy;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface IntelligentTrainingStrategyRepository extends JpaRepository<IntelligentTrainingStrategy,Integer> {
+}
