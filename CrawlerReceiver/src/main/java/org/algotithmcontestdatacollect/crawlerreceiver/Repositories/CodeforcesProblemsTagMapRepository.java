@@ -1,0 +1,8 @@
+package org.algotithmcontestdatacollect.crawlerreceiver.Repositories;
+
+import org.algotithmcontestdatacollect.crawlerreceiver.TableEntity.CodeforcesProblemsTagMap;
+import org.algotithmcontestdatacollect.crawlerreceiver.TableEntity.CodeforcesProblemsTagMapPK;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CodeforcesProblemsTagMapRepository extends JpaRepository<CodeforcesProblemsTagMap, CodeforcesProblemsTagMapPK> {
+}
