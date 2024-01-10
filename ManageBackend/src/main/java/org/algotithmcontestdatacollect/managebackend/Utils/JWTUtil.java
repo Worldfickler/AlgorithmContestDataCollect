@@ -51,7 +51,6 @@ public class JWTUtil {
         var verify = JWT.require(Algorithm.HMAC256(secret)).withIssuer(issuer).build();
         var decodeJWT = verify.verify(token);
         var clains = decodeJWT.getClaims();
-//        logger.info(decodeJWT.getExpiresAt().toString());
         for(var entity : clains.entrySet()) {
             request.setAttribute(entity.getKey(),entity.getValue().asString());
         }

@@ -42,70 +42,69 @@ public class UserController {
         Integer year = data.getInteger("year");
         String stuno = data.getString("stuno");
         String realname = data.getString("realname");
-        if (username == null || password == null || school == null || classname == null || year == null || stuno == null || realname== null) {
-            return ResponseUtil.JSONReturn(404,"参数错误");
+        if (username == null || password == null || school == null || classname == null || year == null || stuno == null || realname == null) {
+            return ResponseUtil.JSONReturn(404, "参数错误");
         }
         if (schoolRepository.countById(school) == 0) {
-            return ResponseUtil.JSONReturn(404,"学校不存在");
+            return ResponseUtil.JSONReturn(404, "学校不存在");
         }
-        if(normalUserRepository.existsBySchoolAndStuNo(school,stuno)){
-            return ResponseUtil.JSONReturn(404,"学号已存在");
+        if (normalUserRepository.existsBySchoolAndStuNo(school, stuno)) {
+            return ResponseUtil.JSONReturn(404, "学号已存在");
         }
         if (normalUserRepository.findByUsername(username) != null) {
             return ResponseUtil.JSONReturn(404, "username already exists");
         }
-        Application application = Application.createNewUser(username, password, school, classname, year, stuno,realname);
+        Application application = Application.createNewUser(username, password, school, classname, year, stuno, realname);
         application = applicationRepository.saveAndFlush(application);
         if (application == null) {
             return ResponseUtil.JSONReturn(404, "register failed");
         }
         return ResponseUtil.JSONReturn(200, "register success");
     }
+
     @PostMapping("/api/login")
     public String login(@RequestBody JSONObject data) {
-        logger.info("login:{}",data.getString("username"));
+        logger.info("login:{}", data.getString("username"));
         String username = data.getString("username");
         String password = data.getString("password");
-        List<Application> createNewUser = applicationRepository.findByOpertationAndStatus("createNewUser", (byte)0);
-        boolean userAudit = createNewUser.stream()
-                .map(Application::getParameter)
-                .map(JSONObject::parseObject)
-                .anyMatch(json -> json.getString("username").equals(username) && json.getString("password").equals(password));
-        if(userAudit) {
+        List<Application> createNewUser = applicationRepository.findByOpertationAndStatus("createNewUser", (byte) 0);
+        boolean userAudit = createNewUser.stream().map(Application::getParameter).map(JSONObject::parseObject).anyMatch(json -> json.getString("username").equals(username) && json.getString("password").equals(password));
+        if (userAudit) {
             return ResponseUtil.JSONReturn(404, "待审核，请联系系统管理员");
         }
-        if (checkExistAndEmpty(username)||checkExistAndEmpty(password)){
-            return ResponseUtil.JSONReturn(404,"参数不足");
+        if (checkExistAndEmpty(username) || checkExistAndEmpty(password)) {
+            return ResponseUtil.JSONReturn(404, "参数不足");
         }
         NormalUser userEntity;
         try {
-            userEntity = checkUserNameAndPassword(username,password);
+            userEntity = checkUserNameAndPassword(username, password);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         if (userEntity == null) {
-            return ResponseUtil.JSONReturn(404,"用户名或密码错误");
+            return ResponseUtil.JSONReturn(404, "用户名或密码错误");
         }
 
         var ret = new JSONObject();
-        Map<String,String> info = new HashMap<>();
-        info.put("username",userEntity.getUsername());
-        info.put("id",userEntity.getId().toString());
-        info.put("school",userEntity.getSchool().toString());
+        Map<String, String> info = new HashMap<>();
+        info.put("username", userEntity.getUsername());
+        info.put("id", userEntity.getId().toString());
+        info.put("school", userEntity.getSchool().toString());
         ret.put("token", jwtUtil.createToken(info));
-        ret.put("username",userEntity.getUsername());
-        ret.put("id",userEntity.getId());
-        return ResponseUtil.JSONReturn(200,ret);
+        ret.put("username", userEntity.getUsername());
+        ret.put("id", userEntity.getId());
+        return ResponseUtil.JSONReturn(200, ret);
     }
+
     @PostMapping("/api/user/flush")
     public String rewrite(HttpServletRequest request) {
         var ret = new JSONObject();
-        Map<String,String> info = new HashMap<>();
-        info.put("username",(String) request.getAttribute("username"));
-        info.put("id",(String) request.getAttribute("id"));
-        info.put("school",(String) request.getAttribute("school"));
-        ret.put("token",jwtUtil.createToken(info));
-        return  ResponseUtil.JSONReturn(200,ret);
+        Map<String, String> info = new HashMap<>();
+        info.put("username", (String) request.getAttribute("username"));
+        info.put("id", (String) request.getAttribute("id"));
+        info.put("school", (String) request.getAttribute("school"));
+        ret.put("token", jwtUtil.createToken(info));
+        return ResponseUtil.JSONReturn(200, ret);
     }
 
     @PostMapping("/api/user/resetPassword")
@@ -114,19 +113,20 @@ public class UserController {
         var user = normalUserRepository.findById(uid);
         if (user.isPresent()) {
             var userEntity = user.get();
-            if(!userEntity.getPassword().equals(data.getString("oldPassword"))){
-                return ResponseUtil.JSONReturn(401,"原密码错误");
+            if (!userEntity.getPassword().equals(data.getString("oldPassword"))) {
+                return ResponseUtil.JSONReturn(401, "原密码错误");
             }
             userEntity.setPassword(data.getString("newPassword"));
-            try{
+            try {
                 normalUserRepository.saveAndFlush(userEntity);
-            }catch (Exception e) {
-                return ResponseUtil.JSONReturn(404,"数据库异常");
+            } catch (Exception e) {
+                return ResponseUtil.JSONReturn(404, "数据库异常");
             }
-            return ResponseUtil.JSONReturn(200,"修改成功");
+            return ResponseUtil.JSONReturn(200, "修改成功");
         }
-        return ResponseUtil.JSONReturn(404,"用户不存在");
+        return ResponseUtil.JSONReturn(404, "用户不存在");
     }
+
     @GetMapping("/api/user/getInfo")
     public String getInfo(HttpServletRequest request) {
         var uid = Long.parseLong((String) request.getAttribute("id"));
@@ -134,17 +134,18 @@ public class UserController {
         if (user.isPresent()) {
             var userEntity = user.get();
             var ret = new JSONObject();
-            ret.put("username",userEntity.getUsername());
-            ret.put("school",userEntity.getSchool());
-            ret.put("classname",userEntity.getClassname());
-            ret.put("year",userEntity.getYear());
-            ret.put("stuno",userEntity.getStuNo());
-            ret.put("realname",userEntity.getRealname());
-            ret.put("employInfo",userEntity.getEmployInfo());
-            return ResponseUtil.JSONReturn(200,ret);
+            ret.put("username", userEntity.getUsername());
+            ret.put("school", userEntity.getSchool());
+            ret.put("classname", userEntity.getClassname());
+            ret.put("year", userEntity.getYear());
+            ret.put("stuno", userEntity.getStuNo());
+            ret.put("realname", userEntity.getRealname());
+            ret.put("employInfo", userEntity.getEmployInfo());
+            return ResponseUtil.JSONReturn(200, ret);
         }
-        return ResponseUtil.JSONReturn(404,"用户不存在");
+        return ResponseUtil.JSONReturn(404, "用户不存在");
     }
+
     @PostMapping("/api/user/modifyInfo")
     public String modifyInfo(@RequestBody JSONObject data, HttpServletRequest request) {
         var uid = Long.parseLong((String) request.getAttribute("id"));
@@ -156,36 +157,36 @@ public class UserController {
             userEntity.setStuNo(data.getString("stuno"));
             userEntity.setRealname(data.getString("realname"));
             userEntity.setEmployInfo(data.getString("employInfo"));
-            try{
+            try {
                 normalUserRepository.saveAndFlush(userEntity);
-            }catch (Exception e) {
-                return ResponseUtil.JSONReturn(404,"数据库异常");
+            } catch (Exception e) {
+                return ResponseUtil.JSONReturn(404, "数据库异常");
             }
-            return ResponseUtil.JSONReturn(200,"修改成功");
+            return ResponseUtil.JSONReturn(200, "修改成功");
         }
-        return ResponseUtil.JSONReturn(404,"用户不存在");
+        return ResponseUtil.JSONReturn(404, "用户不存在");
     }
 
-    private boolean checkExistAndEmpty(String param){
+    private boolean checkExistAndEmpty(String param) {
         return param == null || param.equals("");
     }
 
     private NormalUser checkUserNameAndPassword(String username, String password) throws InterruptedException {
         final boolean[] end = {false};
-        Timer timer=new Timer();
+        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 end[0] = true;
             }
-        },250);
+        }, 250);
         var user = normalUserRepository.findByUsername(username);
         if (user != null) {
-            if (!user.getPassword().equals(password) ) {
+            if (!user.getPassword().equals(password)) {
                 user = null;
             }
         }
-        while (!end[0]){
+        while (!end[0]) {
             Thread.sleep(0);
         }
         return user;

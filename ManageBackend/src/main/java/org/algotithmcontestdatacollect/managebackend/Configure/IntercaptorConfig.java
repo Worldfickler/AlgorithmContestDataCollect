@@ -15,7 +15,7 @@ public class IntercaptorConfig implements WebMvcConfigurer {
     private AdminInterceptor Admininterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(JWTinterceptor).addPathPatterns("/**").excludePathPatterns("/api/login");
+//        registry.addInterceptor(JWTinterceptor).addPathPatterns("/**").excludePathPatterns("/api/login");
         registry.addInterceptor(Admininterceptor).addPathPatterns("/api/admin/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
