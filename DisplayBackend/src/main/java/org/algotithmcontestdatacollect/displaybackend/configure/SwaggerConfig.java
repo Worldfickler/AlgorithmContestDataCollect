@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -22,8 +23,9 @@ public class SwaggerConfig {
                 .apiInfo(webApiInfo())
                 // 创建选择器，控制哪些接口被加入文档
                 .select()
-                // 指定@ApiOperation标注的接口被加入文档
-                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                // 指定 controller 扫描包
+                .apis(RequestHandlerSelectors.basePackage("org.algotithmcontestdatacollect.displaybackend.controllers"))
+                .paths(PathSelectors.any())
                 .build();
     }
 
