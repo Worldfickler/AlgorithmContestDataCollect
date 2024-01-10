@@ -1,6 +1,7 @@
 package org.algotithmcontestdatacollect.displaybackend.entities;
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
 
 import javax.persistence.*;
 
