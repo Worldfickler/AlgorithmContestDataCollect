@@ -138,16 +138,16 @@ public class NormalUser {
     @Override
     public String toString() {
         return "NormalUser{" +
-               "id=" + id + '\'' +
-               "username=" + username + '\'' +
-               "password=" + password + '\'' +
-               "school=" + school + '\'' +
-               "classname=" + classname + '\'' +
-               "stuNo=" + stuNo + '\'' +
-               "year=" + year + '\'' +
-               "status=" + status + '\'' +
-               "realname=" + realname + '\'' +
-               "employInfo=" + employInfo + '\'' +
-               '}';
+                "id=" + id + '\'' +
+                "username=" + username + '\'' +
+                "password=" + password + '\'' +
+                "school=" + school + '\'' +
+                "classname=" + classname + '\'' +
+                "stuNo=" + stuNo + '\'' +
+                "year=" + year + '\'' +
+                "status=" + status + '\'' +
+                "realname=" + realname + '\'' +
+                "employInfo=" + employInfo + '\'' +
+                '}';
     }
 }

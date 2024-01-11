@@ -7,15 +7,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * 拦截器配置
+ */
 @Configuration
 public class IntercaptorConfig implements WebMvcConfigurer {
     @Autowired
     private JWTInterceptor JWTinterceptor;
     @Autowired
     private AdminInterceptor Admininterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(JWTinterceptor).addPathPatterns("/**").excludePathPatterns("/api/login");
+        registry.addInterceptor(JWTinterceptor).addPathPatterns("/**").excludePathPatterns("/api/login");
         registry.addInterceptor(Admininterceptor).addPathPatterns("/api/admin/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }

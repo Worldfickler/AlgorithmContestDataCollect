@@ -1,4 +1,5 @@
 package org.algotithmcontestdatacollect.managebackend.Controllers;
+
 import org.algotithmcontestdatacollect.managebackend.Entities.ApplicationWithUserinfo;
 import org.algotithmcontestdatacollect.managebackend.Entities.Log;
 import org.algotithmcontestdatacollect.managebackend.Repositories.ApplicationWithUserinfoRepository;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.algotithmcontestdatacollect.managebackend.Utils.ResponseUtil;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +35,20 @@ public class ApplicationController {
     @Autowired
     LogRepository logRepository;
 
+    /**
+     * 获取申请信息
+     * @param request
+     * @return
+     */
     @GetMapping("/api/application")
     public String getApplication(HttpServletRequest request) {
         List<ApplicationWithUserinfo> list;
         var admin = Short.parseShort((String) request.getAttribute("isSuper"));
         if (admin == 1) {
             list = applicationWithUserinfoRepository.findAll();
+            for (int i = 0; i < list.size(); i++) {
+                System.out.println(list.toString());
+            }
             return ResponseUtil.JSONReturn(200, (JSONArray) JSONArray.toJSON(list));
         }
         var school = Long.parseLong((String) request.getAttribute("school"));
@@ -48,29 +58,30 @@ public class ApplicationController {
         }
         return ResponseUtil.JSONReturn(200, (JSONArray) JSONArray.toJSON(list));
     }
+
     @PostMapping("/api/application")
     public String handleApplication(@RequestBody JSONObject data, HttpServletRequest request) {
         var id = (Long) data.getLong("id");
-        var status =  data.getByte("status");
+        var status = data.getByte("status");
         var aName = (String) request.getAttribute("username");
         if (id == null || status == null) {
             return ResponseUtil.JSONReturn(404, "参数不足");
         }
         var applicationEntity = applicationRepository.findById(id);
         if (applicationEntity.isPresent()) {
-            if(applicationEntity.get().getStatus() == 1||applicationEntity.get().getStatus() == 2) {
+            if (applicationEntity.get().getStatus() == 1 || applicationEntity.get().getStatus() == 2) {
                 return ResponseUtil.JSONReturn(404, "已经处理过了");
             }
-            try{
+            try {
                 if (status == 1) {
                     applicationService.acceptApplication(id, aName);
-                }else if (status == 2) {
+                } else if (status == 2) {
                     applicationService.rejectApplication(id, aName);
                 }
-            }catch(Exception E) {
+            } catch (Exception E) {
                 return ResponseUtil.JSONReturn(404, E.getMessage());
             }
-        }else{
+        } else {
             return ResponseUtil.JSONReturn(404, "申请不存在");
         }
         return ResponseUtil.JSONReturn(200, "处理成功");

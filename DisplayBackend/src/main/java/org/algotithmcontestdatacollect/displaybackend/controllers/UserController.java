@@ -33,6 +33,11 @@ public class UserController {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    /**
+     * 用户注册
+     * @param data
+     * @return
+     */
     @PostMapping("/api/register")
     public String register(@RequestBody JSONObject data) {
         String username = data.getString("username");
@@ -54,6 +59,7 @@ public class UserController {
         if (normalUserRepository.findByUsername(username) != null) {
             return ResponseUtil.JSONReturn(404, "username already exists");
         }
+        // 注册成功后暂时存放在 application 中，等待管理员的审核
         Application application = Application.createNewUser(username, password, school, classname, year, stuno, realname);
         application = applicationRepository.saveAndFlush(application);
         if (application == null) {
@@ -62,12 +68,18 @@ public class UserController {
         return ResponseUtil.JSONReturn(200, "register success");
     }
 
+    /**
+     * 用户登录
+     * @param data
+     * @return
+     */
     @PostMapping("/api/login")
     public String login(@RequestBody JSONObject data) {
         logger.info("login:{}", data.getString("username"));
         String username = data.getString("username");
         String password = data.getString("password");
         List<Application> createNewUser = applicationRepository.findByOpertationAndStatus("createNewUser", (byte) 0);
+        // 查看是否新增但尚未审核的用户
         boolean userAudit = createNewUser.stream().map(Application::getParameter).map(JSONObject::parseObject).anyMatch(json -> json.getString("username").equals(username) && json.getString("password").equals(password));
         if (userAudit) {
             return ResponseUtil.JSONReturn(404, "待审核，请联系系统管理员");
@@ -75,6 +87,7 @@ public class UserController {
         if (checkExistAndEmpty(username) || checkExistAndEmpty(password)) {
             return ResponseUtil.JSONReturn(404, "参数不足");
         }
+        // 检查用户名和密码是否匹配
         NormalUser userEntity;
         try {
             userEntity = checkUserNameAndPassword(username, password);
@@ -96,6 +109,11 @@ public class UserController {
         return ResponseUtil.JSONReturn(200, ret);
     }
 
+    /**
+     * 刷新用户信息
+     * @param request
+     * @return
+     */
     @PostMapping("/api/user/flush")
     public String rewrite(HttpServletRequest request) {
         var ret = new JSONObject();
@@ -107,8 +125,15 @@ public class UserController {
         return ResponseUtil.JSONReturn(200, ret);
     }
 
+    /**
+     * 修改用户密码
+     * @param data
+     * @param request
+     * @return
+     */
     @PostMapping("/api/user/resetPassword")
     public String resetPassword(@RequestBody JSONObject data, HttpServletRequest request) {
+        System.out.println(request.getAttribute("id"));
         var uid = Long.parseLong((String) request.getAttribute("id"));
         var user = normalUserRepository.findById(uid);
         if (user.isPresent()) {
@@ -127,6 +152,11 @@ public class UserController {
         return ResponseUtil.JSONReturn(404, "用户不存在");
     }
 
+    /**
+     * 获取用户基本信息
+     * @param request
+     * @return
+     */
     @GetMapping("/api/user/getInfo")
     public String getInfo(HttpServletRequest request) {
         var uid = Long.parseLong((String) request.getAttribute("id"));
@@ -146,6 +176,12 @@ public class UserController {
         return ResponseUtil.JSONReturn(404, "用户不存在");
     }
 
+    /**
+     * 修改用户信息
+     * @param data
+     * @param request
+     * @return
+     */
     @PostMapping("/api/user/modifyInfo")
     public String modifyInfo(@RequestBody JSONObject data, HttpServletRequest request) {
         var uid = Long.parseLong((String) request.getAttribute("id"));
@@ -167,10 +203,22 @@ public class UserController {
         return ResponseUtil.JSONReturn(404, "用户不存在");
     }
 
+    /**
+     * 判断参数是否为空
+     * @param param
+     * @return
+     */
     private boolean checkExistAndEmpty(String param) {
         return param == null || param.equals("");
     }
 
+    /**
+     * 判断用户密码是否匹配
+     * @param username
+     * @param password
+     * @return
+     * @throws InterruptedException
+     */
     private NormalUser checkUserNameAndPassword(String username, String password) throws InterruptedException {
         final boolean[] end = {false};
         Timer timer = new Timer();

@@ -17,15 +17,16 @@ public class JWTInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JWTUtil JWTutil;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        try{
+        try {
             return JWTutil.checkToken(request);
-        }catch (Exception err){
+        } catch (Exception err) {
             logger.error(err.getMessage());
             response.setStatus(200);
             response.setCharacterEncoding("UTF8");
-            response.getWriter().write(ResponseUtil.JSONReturn(401,"token过期或错误"));
+            response.getWriter().write(ResponseUtil.JSONReturn(401, "token过期或错误"));
             return false;
         }
 

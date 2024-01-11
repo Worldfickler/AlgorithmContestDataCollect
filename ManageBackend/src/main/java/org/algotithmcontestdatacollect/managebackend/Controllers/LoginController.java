@@ -29,57 +29,58 @@ public class LoginController {
 
     @PostMapping("/api/login")
     public String login(@RequestBody JSONObject data) {
-        logger.info("login:{}",data.getString("username"));
+        logger.info("login:{}", data.getString("username"));
         String username = data.getString("username");
         String password = data.getString("password");
-        if (checkExistAndEmpty(username)||checkExistAndEmpty(password)){
-            return ResponseUtil.JSONReturn(404,"参数不足");
+        if (checkExistAndEmpty(username) || checkExistAndEmpty(password)) {
+            return ResponseUtil.JSONReturn(404, "参数不足");
         }
         Admin userEntity;
         try {
-            userEntity = checkUserNameAndPassword(username,password);
+            userEntity = checkUserNameAndPassword(username, password);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         if (userEntity == null) {
-            return ResponseUtil.JSONReturn(401,"用户名不存在或密码不正确");
+            return ResponseUtil.JSONReturn(401, "用户名不存在或密码不正确");
         }
 
         var ret = new JSONObject();
-        ret.put("token",JWTutil.createToken(userEntity.toStringMap()));
+        ret.put("token", JWTutil.createToken(userEntity.toStringMap()));
         var info = (JSONObject) JSONObject.toJSON(userEntity);
         info.remove("password");
         ret.put("info", info);
-        return ResponseUtil.JSONReturn(200,ret);
+        return ResponseUtil.JSONReturn(200, ret);
     }
 
     @PostMapping("/api/rewrite")
     public String rewriteToken(HttpServletRequest request, HttpServletResponse response) {
         var userEntity = Admin.fromHTTPRequest(request);
         var ret = new JSONObject();
-        ret.put("token",JWTutil.createToken(userEntity.toStringMap()));
-        return ResponseUtil.JSONReturn(200,ret);
+        ret.put("token", JWTutil.createToken(userEntity.toStringMap()));
+        return ResponseUtil.JSONReturn(200, ret);
     }
 
-    boolean checkExistAndEmpty(String param){
+    boolean checkExistAndEmpty(String param) {
         return param == null || param.equals("");
     }
+
     public Admin checkUserNameAndPassword(String username, String password) throws InterruptedException {
         final boolean[] end = {false};
-        Timer timer=new Timer();
+        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 end[0] = true;
             }
-        },250);
+        }, 250);
         var user = adminRepository.findByUsername(username);
         if (user != null) {
-            if (!user.getPassword().equals(password) ) {
+            if (!user.getPassword().equals(password)) {
                 user = null;
             }
         }
-        while (!end[0]){
+        while (!end[0]) {
             Thread.sleep(0);
         }
         return user;

@@ -83,11 +83,11 @@ public class UserController {
     @DeleteMapping("/api/deleteUser/{uid}")
     public String deleteUser(@PathVariable Long uid) {
         Optional<NormalUser> op = normalUserRepository.findById(uid);
-        if(op.isPresent()) {
+        if (op.isPresent()) {
             normalUserRepository.deleteById(uid);
-            return ResponseUtil.JSONReturn(200,"删除成功");
-        }else{
-            return ResponseUtil.JSONReturn(404,"无此用户");
+            return ResponseUtil.JSONReturn(200, "删除成功");
+        } else {
+            return ResponseUtil.JSONReturn(404, "无此用户");
         }
     }
 
@@ -96,14 +96,14 @@ public class UserController {
         var uid = data.getLong("uid");
         var newPassword = data.getString("newPassword");
         Optional<NormalUser> op = normalUserRepository.findById(uid);
-        if(op.isPresent()) {
+        if (op.isPresent()) {
             var u = op.get();
             u.setPassword(newPassword);
             normalUserRepository.save(u);
             normalUserRepository.flush();
-            return ResponseUtil.JSONReturn(200,"修改成功");
-        }else{
-            return ResponseUtil.JSONReturn(404,"无此用户");
+            return ResponseUtil.JSONReturn(200, "修改成功");
+        } else {
+            return ResponseUtil.JSONReturn(404, "无此用户");
         }
     }
 
@@ -119,33 +119,34 @@ public class UserController {
 //            userEntity.setRealname(data.getString("realname"));
 //            userEntity.setStatus(data.getByte("status"));
             BeanUtils.copyProperties(data, userEntity, UpdateColumnUtil.getNullPropertyNames(data));
-            try{
+            try {
                 normalUserRepository.saveAndFlush(userEntity);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                return ResponseUtil.JSONReturn(404,"数据库异常");
+                return ResponseUtil.JSONReturn(404, "数据库异常");
             }
-            return ResponseUtil.JSONReturn(200,"修改成功");
+            return ResponseUtil.JSONReturn(200, "修改成功");
         }
-        return ResponseUtil.JSONReturn(404,"用户不存在");
+        return ResponseUtil.JSONReturn(404, "用户不存在");
     }
+
     @PostMapping("/api/modifyNormalUserStatusBatch")
     public String modifyInfo(@RequestBody JSONObject data) {
         var status = data.getByte("status");
         JSONArray ids = data.getJSONArray("ids");
         List<Long> strings = ids.toJavaList(Long.class);
         List<NormalUser> allById = normalUserRepository.findAllById(strings);
-        if (allById.size()>0) {
-            allById.forEach(k-> k.setStatus(status));
-            try{
+        if (allById.size() > 0) {
+            allById.forEach(k -> k.setStatus(status));
+            try {
                 normalUserRepository.saveAllAndFlush(allById);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                return ResponseUtil.JSONReturn(404,"数据库异常");
+                return ResponseUtil.JSONReturn(404, "数据库异常");
             }
-            return ResponseUtil.JSONReturn(200,"修改成功");
+            return ResponseUtil.JSONReturn(200, "修改成功");
         }
-        return ResponseUtil.JSONReturn(404,"用户不存在");
+        return ResponseUtil.JSONReturn(404, "用户不存在");
     }
 
 

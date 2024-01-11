@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository<NormalUser,Long> {
+public interface UserRepository extends JpaRepository<NormalUser, Long> {
     public NormalUser findByUsername(String username);
 
-    @Query(nativeQuery = true,value = "SELECT id FROM normal_user")
+    @Query(nativeQuery = true, value = "SELECT id FROM normal_user")
     List<Long> getAllUserId();
 
     boolean existsBySchoolAndStuNo(Long school, String stuNo);
-    @Query(nativeQuery = true,value = "SELECT * FROM normal_user where id in :ids")
-    List<NormalUser>findByIds(List<Long>ids);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM normal_user where id in :ids")
+    List<NormalUser> findByIds(List<Long> ids);
 }
