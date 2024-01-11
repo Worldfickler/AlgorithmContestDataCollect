@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Codeforces 账号管理
+ */
 @RestController
 public class CodeforcesAccountController {
     private static final Logger logger = LoggerFactory.getLogger(CodeforcesAccountController.class);
@@ -26,6 +29,12 @@ public class CodeforcesAccountController {
 
     @Autowired
     private CfAccountRepository cfAccountRepository;
+
+    /**
+     * 获取 Codeforces 账号信息
+     * @param request
+     * @return
+     */
     @GetMapping("/api/codeforces/account")
     public String getAllAccounts(HttpServletRequest request) {
         List<CfAccountWithUsername> cfcountEntity;
@@ -41,6 +50,12 @@ public class CodeforcesAccountController {
         return ResponseUtil.JSONReturn(200, (JSONArray) JSONArray.toJSON(cfcountEntity));
     }
 
+    /**
+     * 删除 Codeforces 账号
+     * @param data
+     * @param request
+     * @return
+     */
     @DeleteMapping("/api/codeforces/account")
     public String getAccount(@RequestBody JSONObject data, HttpServletRequest request) {
         Long id = data.getLong("id");
